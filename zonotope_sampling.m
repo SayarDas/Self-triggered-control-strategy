@@ -1,4 +1,4 @@
-%% defining A,B,E,H,epsilon
+%% defining A,B,E,H,epsilon. Matrices should satisfy disturbance decoupling condition
 eigenvalue = 1/10*[-5 0 0 0 0 0; 0 -50.1 0 0 0 0; 0 0 -10.3 0 0 0; 0 0 0 -30.4 0 0; 0 0 0 0 -40.5 0; 0 0 0 0 0 -60.6];
 eigenvector = [0.1 -20 5 2 20 4; 0 9 -25 20 5 -10;2 -17 15 4 1 0; 5 16 -19 0 2 1;-6 11 -2 5 6 0;-8 9 -1 5 7 -16];
 %eigenvector = [0.1 -20 5 2 20 -0.1667; 0 9 -25 20 5 -0.0417;2 -17 15 4 1 -0.0083; 5 16 -19 0 2 -0.0167;-6 11 -2 5 6 -0.05;-8 9 -1 5 7 -0.0583];
@@ -10,7 +10,8 @@ E = [1;0;0;0;0;0];
 %H = [-1 3 5 1/2 9 8; -3 6 8 1 5 0] ;
 H = [0 -1 0 1 0 0;0 0 0 0 -1 0];
 epsilon = 0.1;
-%% disturbance decoupling
+
+%% Find feedback matrix for disturbance decoupling
 Vstar=null(H);
 for i = 1:(size(H,2)-rank(H))  %rank-nullity theorem, giving dimension of kernel of H
   Z = null([Vstar';B']);    %nu-star algorithm
@@ -28,13 +29,15 @@ end
  transposeF = -linsolve(transpose(Vstar),transpose(X(p-1:p,:)));
  %Vstar_gi = gen_inv(Vstar);
  F = transpose(transposeF);
- %% initial conditions
+ 
+ %% proposing random initial conditions
 %     x0 = [0;0;0;0;0;0];
    x0 =1/10*[0;0.1;4;0.15/sqrt(2);0.25/sqrt(2);0.2];
 %    x0 = [0.595197704931052;-1.15722386019289;1.39115876943583;-1.21896742934121;0.0756117477677569;-0.203947480368569];
 %   x0 = [0.182802211161469;0.101763171101706;-0.0951342391596149;0.0701977367720205;0.0446852844068269;0.0554638532199223];
 %    x0 = 1/100*[10;56;-24;-30;80;1];
- %% finding zonotopes
+
+ %% finding second term of the expression
  T = 0.95;
  step = 0.001;
  n = (T/step);
@@ -97,6 +100,7 @@ end
 % u_0 = linsolve(g_0,req_vec);
 % f_16_ker = u_0(1)/x0(6);
 % f_26_ker = u_0(2)/x0(6);
+
 %% finding zonotope for disturbance
 step_sampling_time = 0.1;
 A_discrete = expm(A*step_sampling_time);
