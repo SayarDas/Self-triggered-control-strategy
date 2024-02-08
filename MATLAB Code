@@ -90,7 +90,7 @@ The following part proposes random initial conditions.
   hold on
 %  plot(t,derivative_norm_traj_f)
 %  hold on
-%   plot(t,norm_traj_total_f)
+ plot(t,norm_traj_total_f)
  hold on
  eps = zeros(floor(T/step)+1,1);
  eps(eps==0) = epsilon;
